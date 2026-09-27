@@ -362,11 +362,16 @@
     return null;
   }
 
-  Promise.all([get(api("predictions","hilo")), get(api("predictions","h"))]).then(function(r){
+  function applyFresh(r){
     S.hilo = r[0]; S.hourly = r[1];
     S.fetchedAt = new Date(); S.stale = false;
     saveCache(); render();
-  }).catch(function(){
+  }
+  function fetchFresh(){
+    return Promise.all([get(api("predictions","hilo")), get(api("predictions","h"))]);
+  }
+
+  fetchFresh().then(applyFresh).catch(function(){
     var c = loadCache();
     if(c){
       S.hilo = c.hilo; S.hourly = c.hourly || [];
@@ -378,6 +383,11 @@
       $("status").textContent = "Couldn't load tide data. Check connection and reopen.";
     }
   });
+
+  // Keep tides continuously fresh while the app stays open: re-fetch live
+  // data every 15 minutes. A failed background refresh silently keeps the
+  // current data rather than flashing an error.
+  setInterval(function(){ fetchFresh().then(applyFresh).catch(function(){}); }, 15*60*1000);
 })();
 </script>
 </body>
