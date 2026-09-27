@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ponte Vedra Beach Tides</title>
+<meta name="description" content="Live tide times for Ponte Vedra Beach, Florida.">
+<meta name="theme-color" content="#0b3d66">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PVB Tides">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+  :root{
+    --bg:#0b3d66; --bg2:#082c4c; --card:#ffffff; --ink:#102a43;
+    --muted:#5b7a99; --accent:#0e9bd8; --high:#0e9bd8; --low:#f0a13c;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+    color:var(--ink); min-height:100vh; min-height:100dvh;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap{max-width:520px; margin:0 auto; padding:20px 16px 40px;}
+  header{text-align:center; color:#fff; padding:8px 0 4px;}
+  header h1{font-size:22px; font-weight:700; margin:0; letter-spacing:.2px;}
+  header p{margin:6px 0 0; font-size:14px; color:#bcd7ee;}
+  .hero{
+    background:var(--card); border-radius:20px; padding:26px 20px; margin-top:16px;
+    text-align:center; box-shadow:0 8px 24px rgba(0,0,0,.25);
+  }
+  .hero .label{font-size:13px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase;}
+  .hero .kind{font-size:44px; font-weight:800; margin:8px 0 2px;}
+  .hero .kind.high{color:var(--high);} .hero .kind.low{color:var(--low);}
+  .hero .time{font-size:30px; font-weight:700;}
+  .hero .detail{font-size:17px; color:var(--muted); margin-top:6px;}
+  .hero .count{font-size:20px; font-weight:700; color:var(--ink); margin-top:12px;}
+  .section{
+    background:var(--card); border-radius:20px; padding:18px; margin-top:14px;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);
+  }
+  .section h2{font-size:15px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin:0 0 10px;}
+  .tide-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 4px; border-top:1px solid #e8eef5; font-size:18px;
+  }
+  .tide-row:first-of-type{border-top:none;}
+  .tide-row .t{font-weight:700; display:flex; align-items:center; gap:10px;}
+  .dot{width:12px; height:12px; border-radius:50%; display:inline-block;}
+  .dot.H{background:var(--high);} .dot.L{background:var(--low);}
+  .tide-row .h{color:var(--muted); font-variant-numeric:tabular-nums;}
+  .day{margin-top:14px;}
+  .day h3{font-size:17px; margin:0 0 4px; font-weight:700;}
+  .day h3 span{font-weight:400; color:var(--muted); font-size:15px;}
+  .status{text-align:center; color:#bcd7ee; font-size:14px; margin-top:14px; min-height:20px;}
+  .status.stale{color:#ffd88a;}
+  .install{
+    display:none; background:#fff8e6; border:2px solid #f0c453; color:#7a5b00;
+    border-radius:16px; padding:14px 16px; margin-top:14px; font-size:15px; line-height:1.45;
+  }
+  .install.show{display:block;}
+  .install b{display:block; margin-bottom:4px; font-size:16px;}
+  footer{text-align:center; color:#8fb3d4; font-size:12.5px; margin-top:18px; line-height:1.6; padding:0 12px;}
+  footer a{color:#cfe6fa;}
+  .spinner{width:34px; height:34px; border:4px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; margin:40px auto; animation:spin 1s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .retry{background:#fff; border:none; border-radius:12px; padding:12px 22px; font-size:17px; font-weight:700; color:var(--bg); margin-top:10px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🌊 Ponte Vedra Beach Tides</h1>
+    <p>Live tide times, updated every time you open</p>
+  </header>
+
+  <div class="install" id="installTip">
+    <b>Install this as an app</b>
+    Tap <b>Share</b> <span aria-hidden="true">⎙</span> in Safari, then <b>Add to Home Screen</b> — it will live on your home screen like any app.
+  </div>
+
+  <div id="loading"><div class="spinner"></div></div>
+  <div id="app" style="display:none">
+    <div class="hero" id="hero"></div>
+    <div class="section">
+      <h2>Today</h2>
+      <div id="todayList"></div>
+    </div>
+    <div class="section">
+      <h2>7-Day Outlook</h2>
+      <div id="weekList"></div>
+    </div>
+  </div>
+  <div class="status" id="status"></div>
+
+  <footer>
+    Tide predictions: U.S. NOAA &middot; Nearest open-coast gauge to Ponte Vedra Beach<br>
+    <span id="updatedLine"></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var STATION = "8720291"; // Jacksonville Beach open-coast gauge, ~3 mi north of Ponte Vedra Beach
+  var DAYS = 7;
+  var CACHE_KEY = "pvb-tides-cache-v1";
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  // Show the "Add to Home Screen" tip when not running as an installed app
+  var standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  if(!standalone){ $("installTip").classList.add("show"); }
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
+  }
+
+  function ymd(d){
+    var m = String(d.getMonth()+1).padStart(2,"0"), day = String(d.getDate()).padStart(2,"0");
+    return d.getFullYear()+m+day;
+  }
+  function fmtTime(t){ // "2026-09-27 09:40" -> "9:40 AM"
+    var hm = t.slice(11,16).split(":"), h = +hm[0], m = hm[1];
+    var ap = h >= 12 ? "PM" : "AM"; h = h % 12; if(h===0) h = 12;
+    return h + ":" + m + " " + ap;
+  }
+  function fmtDay(t){ // -> "Mon, Sep 28"
+    var d = new Date(t.slice(0,10)+"T12:00:00");
+    return d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+  }
+  function parseLocal(t){ return new Date(t.slice(0,10)+"T"+t.slice(11,16)+":00"); }
+
+  function fetchTides(){
+    var now = new Date(), end = new Date(now); end.setDate(end.getDate() + (DAYS-1));
+    var url = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+      + "?product=predictions&application=pvb-tide-pwa"
+      + "&begin_date="+ymd(now)+"&end_date="+ymd(end)
+      + "&datum=MLLW&station="+STATION+"&time_zone=lst_ldt&units=english&interval=hilo&format=json";
+    return fetch(url).then(function(r){
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      return r.json();
+    }).then(function(j){
+      if(j.error) throw new Error(j.error.message || "tide service error");
+      if(!j.predictions || !j.predictions.length) throw new Error("no tide data");
+      return j.predictions;
+    });
+  }
+
+  function rowHTML(p){
+    var label = p.type === "H" ? "High tide" : "Low tide";
+    return '<div class="tide-row"><span class="t"><span class="dot '+p.type+'"></span>'+label+
+      '</span><span><b>'+fmtTime(p.t)+'</b> <span class="h">'+Number(p.v).toFixed(1)+' ft</span></span></div>';
+  }
+
+  function render(preds, fetchedAt, isStale){
+    var now = new Date();
+    var upcoming = preds.filter(function(p){ return parseLocal(p.t) > now; });
+    var hero = $("hero");
+    if(upcoming.length){
+      var n = upcoming[0], nt = parseLocal(n.t);
+      var label = n.type === "H" ? "High Tide" : "Low Tide";
+      hero.innerHTML =
+        '<div class="label">Next tide</div>'+
+        '<div class="kind '+(n.type==="H"?"high":"low")+'">'+label+'</div>'+
+        '<div class="time">'+fmtTime(n.t)+'</div>'+
+        '<div class="detail">'+fmtDay(n.t)+' &middot; '+Number(n.v).toFixed(1)+' ft</div>'+
+        '<div class="count" id="countdown"></div>';
+      var cd = $("countdown");
+      var tick = function(){
+        var ms = nt - new Date();
+        if(ms <= 0){ cd.textContent = "happening now"; return; }
+        var h = Math.floor(ms/36e5), m = Math.floor(ms%36e5/6e4);
+        cd.textContent = h > 0 ? ("in "+h+" hr "+m+" min") : ("in "+m+" min");
+      };
+      tick(); setInterval(tick, 30000);
+    } else {
+      hero.innerHTML = '<div class="label">Tides</div><div class="detail">No more predicted tides in this outlook.</div>';
+    }
+
+    var todayStr = ymd(now);
+    var todays = preds.filter(function(p){ return p.t.slice(0,10).replace(/-/g,"") === todayStr; });
+    $("todayList").innerHTML = todays.length ? todays.map(rowHTML).join("")
+      : '<div class="detail" style="color:var(--muted)">No more tides today.</div>';
+
+    var byDay = {};
+    preds.forEach(function(p){ var k = p.t.slice(0,10); (byDay[k] = byDay[k]||[]).push(p); });
+    $("weekList").innerHTML = Object.keys(byDay).sort().map(function(k){
+      return '<div class="day"><h3>'+fmtDay(k+" 00:00")+'</h3>'+byDay[k].map(rowHTML).join("")+'</div>';
+    }).join("");
+
+    $("loading").style.display = "none";
+    $("app").style.display = "block";
+    var st = $("status");
+    if(isStale){
+      st.className = "status stale";
+      st.textContent = "Showing last saved tides — couldn't reach live data. Pull to refresh.";
+    } else {
+      st.className = "status";
+      st.textContent = "Live from NOAA";
+    }
+    $("updatedLine").textContent = "Updated " + fetchedAt.toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+  }
+
+  function fail(msg, cached){
+    $("loading").style.display = "none";
+    if(cached){
+      render(cached.preds, new Date(cached.at), true);
+      return;
+    }
+    $("status").className = "status stale";
+    $("status").innerHTML = "Couldn't load tide data.<br><button class='retry' onclick='location.reload()'>Try again</button>";
+  }
+
+  fetchTides().then(function(preds){
+    var at = Date.now();
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({at:at, preds:preds})); }catch(e){}
+    render(preds, new Date(at), false);
+  }).catch(function(){
+    var cached = null;
+    try{ cached = JSON.parse(localStorage.getItem(CACHE_KEY)); }catch(e){}
+    fail("offline", cached);
+  });
+})();
+</script>
+</body>
+</html>
