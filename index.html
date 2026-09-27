@@ -15,61 +15,81 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <style>
   :root{
-    --bg:#0b3d66; --bg2:#082c4c; --card:#ffffff; --ink:#102a43;
-    --muted:#5b7a99; --accent:#0e9bd8; --high:#0e9bd8; --low:#f0a13c;
+    --bg:#0b3d66; --bg2:#072a49; --card:#ffffff; --ink:#102a43;
+    --muted:#5b7a99; --accent:#0e9bd8; --high:#0e9bd8; --low:#274b73;
+    --pill:#123f63;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0; padding:0;}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+    background-attachment:fixed;
     color:var(--ink); min-height:100vh; min-height:100dvh;
     padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
-  .wrap{max-width:520px; margin:0 auto; padding:20px 16px 40px;}
-  header{text-align:center; color:#fff; padding:8px 0 4px;}
+  .wrap{max-width:560px; margin:0 auto; padding:20px 14px 44px;}
+  header{text-align:center; color:#fff; padding:8px 0 2px;}
   header h1{font-size:22px; font-weight:700; margin:0; letter-spacing:.2px;}
   header p{margin:6px 0 0; font-size:14px; color:#bcd7ee;}
+
   .hero{
-    background:var(--card); border-radius:20px; padding:26px 20px; margin-top:16px;
-    text-align:center; box-shadow:0 8px 24px rgba(0,0,0,.25);
+    background:linear-gradient(135deg,#ffffff 0%,#eef6fd 100%);
+    border-radius:22px; padding:24px 20px; margin-top:16px; text-align:center;
+    box-shadow:0 10px 28px rgba(0,0,0,.28);
   }
-  .hero .label{font-size:13px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase;}
-  .hero .kind{font-size:44px; font-weight:800; margin:8px 0 2px;}
+  .hero .label{font-size:12px; font-weight:700; letter-spacing:2.5px; color:var(--muted); text-transform:uppercase;}
+  .hero .kind{font-size:46px; font-weight:800; margin:6px 0 2px;}
   .hero .kind.high{color:var(--high);} .hero .kind.low{color:var(--low);}
-  .hero .time{font-size:30px; font-weight:700;}
-  .hero .detail{font-size:17px; color:var(--muted); margin-top:6px;}
-  .hero .count{font-size:20px; font-weight:700; color:var(--ink); margin-top:12px;}
-  .section{
-    background:var(--card); border-radius:20px; padding:18px; margin-top:14px;
-    box-shadow:0 8px 24px rgba(0,0,0,.18);
-  }
-  .section h2{font-size:15px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin:0 0 10px;}
-  .tide-row{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:12px 4px; border-top:1px solid #e8eef5; font-size:18px;
-  }
+  .hero .time{font-size:32px; font-weight:700; font-variant-numeric:tabular-nums;}
+  .hero .detail{font-size:16px; color:var(--muted); margin-top:6px;}
+  .hero .count{display:inline-block; font-size:18px; font-weight:700; color:#fff;
+    background:var(--pill); border-radius:999px; padding:8px 20px; margin-top:14px;}
+
+  .daystrip{display:flex; gap:8px; overflow-x:auto; margin-top:14px; padding:4px 2px 8px;
+    scrollbar-width:none;}
+  .daystrip::-webkit-scrollbar{display:none;}
+  .daypill{flex:0 0 auto; border:2px solid rgba(255,255,255,.35); background:rgba(255,255,255,.08);
+    color:#fff; border-radius:14px; padding:9px 14px; font-size:15px; font-weight:600; cursor:pointer;}
+  .daypill small{display:block; font-size:12px; font-weight:400; color:#bcd7ee;}
+  .daypill.active{background:#fff; color:var(--ink); border-color:#fff;}
+  .daypill.active small{color:var(--muted);}
+
+  .card{background:var(--card); border-radius:22px; padding:18px 16px; margin-top:12px;
+    box-shadow:0 10px 28px rgba(0,0,0,.22);}
+  .card h2{font-size:14px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase;
+    color:var(--muted); margin:0 0 4px;}
+  .card .daysub{font-size:17px; font-weight:700; margin-bottom:8px;}
+  .card svg{width:100%; height:auto; display:block;}
+
+  .seg{display:flex; background:#e8eef5; border-radius:12px; padding:4px; margin:2px 0 6px;}
+  .seg button{flex:1; border:none; background:transparent; border-radius:9px; padding:10px 4px;
+    font-size:15px; font-weight:600; color:var(--muted); cursor:pointer;}
+  .seg button.active{background:#fff; color:var(--ink); box-shadow:0 2px 6px rgba(0,0,0,.12);}
+
+  .tide-row{display:flex; align-items:center; justify-content:space-between;
+    padding:13px 4px; border-top:1px solid #e8eef5; font-size:18px;}
   .tide-row:first-of-type{border-top:none;}
-  .tide-row .t{font-weight:700; display:flex; align-items:center; gap:10px;}
-  .dot{width:12px; height:12px; border-radius:50%; display:inline-block;}
-  .dot.H{background:var(--high);} .dot.L{background:var(--low);}
-  .tide-row .h{color:var(--muted); font-variant-numeric:tabular-nums;}
-  .day{margin-top:14px;}
-  .day h3{font-size:17px; margin:0 0 4px; font-weight:700;}
-  .day h3 span{font-weight:400; color:var(--muted); font-size:15px;}
+  .tide-row .t{font-weight:700; display:flex; align-items:center; gap:12px;}
+  .badge{width:44px; height:44px; border-radius:12px; display:inline-flex; align-items:center;
+    justify-content:center; color:#fff; font-size:20px; flex:0 0 auto;}
+  .badge.H{background:linear-gradient(135deg,#19b1f0,#0b7fc4);}
+  .badge.L{background:linear-gradient(135deg,#3d6a99,#1d3a5c);}
+  .tide-row .h{color:var(--muted); font-variant-numeric:tabular-nums; font-size:16px;}
+  .tide-row .tt{font-variant-numeric:tabular-nums;}
+
   .status{text-align:center; color:#bcd7ee; font-size:14px; margin-top:14px; min-height:20px;}
   .status.stale{color:#ffd88a;}
-  .install{
-    display:none; background:#fff8e6; border:2px solid #f0c453; color:#7a5b00;
-    border-radius:16px; padding:14px 16px; margin-top:14px; font-size:15px; line-height:1.45;
-  }
+  .install{display:none; background:#fff8e6; border:2px solid #f0c453; color:#7a5b00;
+    border-radius:16px; padding:14px 16px; margin-top:14px; font-size:15px; line-height:1.45;}
   .install.show{display:block;}
   .install b{display:block; margin-bottom:4px; font-size:16px;}
   footer{text-align:center; color:#8fb3d4; font-size:12.5px; margin-top:18px; line-height:1.6; padding:0 12px;}
-  footer a{color:#cfe6fa;}
-  .spinner{width:34px; height:34px; border:4px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; margin:40px auto; animation:spin 1s linear infinite;}
+  .spinner{width:34px; height:34px; border:4px solid rgba(255,255,255,.3); border-top-color:#fff;
+    border-radius:50%; margin:44px auto; animation:spin 1s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
-  .retry{background:#fff; border:none; border-radius:12px; padding:12px 22px; font-size:17px; font-weight:700; color:var(--bg); margin-top:10px;}
+  .nowdot{animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.35;}}
 </style>
 </head>
 <body>
@@ -81,21 +101,32 @@
 
   <div class="install" id="installTip">
     <b>Install this as an app</b>
-    Tap <b>Share</b> <span aria-hidden="true">⎙</span> in Safari, then <b>Add to Home Screen</b> — it will live on your home screen like any app.
+    Tap <b>Share</b> in Safari, then <b>Add to Home Screen</b> — it will live on your home screen like any app.
   </div>
 
   <div id="loading"><div class="spinner"></div></div>
+
   <div id="app" style="display:none">
     <div class="hero" id="hero"></div>
-    <div class="section">
-      <h2>Today</h2>
-      <div id="todayList"></div>
+    <div class="daystrip" id="daystrip"></div>
+
+    <div class="card">
+      <h2>Tide Height</h2>
+      <div class="daysub" id="curveDay"></div>
+      <svg id="curve" viewBox="0 0 600 300" role="img" aria-label="Tide height curve"></svg>
     </div>
-    <div class="section">
-      <h2>7-Day Outlook</h2>
-      <div id="weekList"></div>
+
+    <div class="card">
+      <h2>Tide Times</h2>
+      <div class="seg" id="filterSeg">
+        <button data-f="all" class="active">All</button>
+        <button data-f="H">High tides</button>
+        <button data-f="L">Low tides</button>
+      </div>
+      <div id="tideList"></div>
     </div>
   </div>
+
   <div class="status" id="status"></div>
 
   <footer>
@@ -109,122 +140,243 @@
   "use strict";
   var STATION = "8720291"; // Jacksonville Beach open-coast gauge, ~3 mi north of Ponte Vedra Beach
   var DAYS = 7;
-  var CACHE_KEY = "pvb-tides-cache-v1";
+  var CACHE_KEY = "pvb-tides-cache-v2";
+
+  var S = { hilo:[], hourly:[], dayIdx:0, filter:"all", fetchedAt:null, stale:false };
 
   var $ = function(id){ return document.getElementById(id); };
 
-  // Show the "Add to Home Screen" tip when not running as an installed app
   var standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
   if(!standalone){ $("installTip").classList.add("show"); }
-
   if("serviceWorker" in navigator){
     window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
   }
 
   function ymd(d){
-    var m = String(d.getMonth()+1).padStart(2,"0"), day = String(d.getDate()).padStart(2,"0");
-    return d.getFullYear()+m+day;
+    return d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
   }
-  function fmtTime(t){ // "2026-09-27 09:40" -> "9:40 AM"
-    var hm = t.slice(11,16).split(":"), h = +hm[0], m = hm[1];
-    var ap = h >= 12 ? "PM" : "AM"; h = h % 12; if(h===0) h = 12;
-    return h + ":" + m + " " + ap;
-  }
-  function fmtDay(t){ // -> "Mon, Sep 28"
-    var d = new Date(t.slice(0,10)+"T12:00:00");
-    return d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
-  }
+  function dayKey(t){ return t.slice(0,10); }
   function parseLocal(t){ return new Date(t.slice(0,10)+"T"+t.slice(11,16)+":00"); }
-
-  function fetchTides(){
-    var now = new Date(), end = new Date(now); end.setDate(end.getDate() + (DAYS-1));
-    var url = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
-      + "?product=predictions&application=pvb-tide-pwa"
+  function fmtTime(t){
+    var p = t.slice(11,16).split(":"), h = +p[0];
+    var ap = h >= 12 ? "PM" : "AM"; h = h % 12; if(h===0) h = 12;
+    return h + ":" + p[1] + " " + ap;
+  }
+  function fmtDayShort(k){ // "2026-09-28" -> "Mon 28"
+    return new Date(k+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",day:"numeric"});
+  }
+  function fmtDayLong(k){
+    return new Date(k+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+  }
+  function api(product, interval){
+    var now = new Date(), end = new Date(now); end.setDate(end.getDate()+(DAYS-1));
+    return "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+      + "?product="+product+"&application=pvb-tide-pwa"
       + "&begin_date="+ymd(now)+"&end_date="+ymd(end)
-      + "&datum=MLLW&station="+STATION+"&time_zone=lst_ldt&units=english&interval=hilo&format=json";
+      + "&datum=MLLW&station="+STATION+"&time_zone=lst_ldt&units=english"
+      + "&interval="+interval+"&format=json";
+  }
+  function get(url){
     return fetch(url).then(function(r){
       if(!r.ok) throw new Error("HTTP "+r.status);
       return r.json();
     }).then(function(j){
       if(j.error) throw new Error(j.error.message || "tide service error");
-      if(!j.predictions || !j.predictions.length) throw new Error("no tide data");
-      return j.predictions;
+      return j.predictions || j.data || [];
     });
   }
 
-  function rowHTML(p){
-    var label = p.type === "H" ? "High tide" : "Low tide";
-    return '<div class="tide-row"><span class="t"><span class="dot '+p.type+'"></span>'+label+
-      '</span><span><b>'+fmtTime(p.t)+'</b> <span class="h">'+Number(p.v).toFixed(1)+' ft</span></span></div>';
+  function days(){ // ordered unique day keys from hilo data
+    var seen = {}, out = [];
+    S.hilo.forEach(function(p){ var k = dayKey(p.t); if(!seen[k]){ seen[k]=1; out.push(k); } });
+    return out;
   }
 
-  function render(preds, fetchedAt, isStale){
+  function renderHero(){
     var now = new Date();
-    var upcoming = preds.filter(function(p){ return parseLocal(p.t) > now; });
-    var hero = $("hero");
-    if(upcoming.length){
-      var n = upcoming[0], nt = parseLocal(n.t);
-      var label = n.type === "H" ? "High Tide" : "Low Tide";
-      hero.innerHTML =
-        '<div class="label">Next tide</div>'+
-        '<div class="kind '+(n.type==="H"?"high":"low")+'">'+label+'</div>'+
-        '<div class="time">'+fmtTime(n.t)+'</div>'+
-        '<div class="detail">'+fmtDay(n.t)+' &middot; '+Number(n.v).toFixed(1)+' ft</div>'+
-        '<div class="count" id="countdown"></div>';
-      var cd = $("countdown");
-      var tick = function(){
-        var ms = nt - new Date();
-        if(ms <= 0){ cd.textContent = "happening now"; return; }
-        var h = Math.floor(ms/36e5), m = Math.floor(ms%36e5/6e4);
-        cd.textContent = h > 0 ? ("in "+h+" hr "+m+" min") : ("in "+m+" min");
-      };
-      tick(); setInterval(tick, 30000);
-    } else {
-      hero.innerHTML = '<div class="label">Tides</div><div class="detail">No more predicted tides in this outlook.</div>';
+    var upcoming = S.hilo.filter(function(p){ return parseLocal(p.t) > now; });
+    var el = $("hero");
+    if(!upcoming.length){
+      el.innerHTML = '<div class="label">Tides</div><div class="detail">No more predicted tides in this outlook.</div>';
+      return;
     }
+    var n = upcoming[0], nt = parseLocal(n.t);
+    var isH = n.type === "H";
+    el.innerHTML =
+      '<div class="label">Next tide</div>'+
+      '<div class="kind '+(isH?"high":"low")+'">'+(isH?"High Tide":"Low Tide")+'</div>'+
+      '<div class="time">'+fmtTime(n.t)+'</div>'+
+      '<div class="detail">'+fmtDayLong(dayKey(n.t))+' &middot; '+Number(n.v).toFixed(1)+' ft</div>'+
+      '<div><span class="count" id="countdown"></span></div>';
+    var cd = $("countdown");
+    var tick = function(){
+      var ms = nt - new Date();
+      if(ms <= 0){ cd.textContent = "happening now"; return; }
+      var h = Math.floor(ms/36e5), m = Math.floor(ms%36e5/6e4);
+      cd.textContent = h > 0 ? ("in "+h+" hr "+m+" min") : ("in "+m+" min");
+    };
+    tick();
+    if(renderHero._t) clearInterval(renderHero._t);
+    renderHero._t = setInterval(tick, 30000);
+  }
 
-    var todayStr = ymd(now);
-    var todays = preds.filter(function(p){ return p.t.slice(0,10).replace(/-/g,"") === todayStr; });
-    $("todayList").innerHTML = todays.length ? todays.map(rowHTML).join("")
-      : '<div class="detail" style="color:var(--muted)">No more tides today.</div>';
-
-    var byDay = {};
-    preds.forEach(function(p){ var k = p.t.slice(0,10); (byDay[k] = byDay[k]||[]).push(p); });
-    $("weekList").innerHTML = Object.keys(byDay).sort().map(function(k){
-      return '<div class="day"><h3>'+fmtDay(k+" 00:00")+'</h3>'+byDay[k].map(rowHTML).join("")+'</div>';
+  function renderStrip(){
+    var ds = days(), now = new Date(), todayK = ymd(now).replace(/(\d{4})(\d{2})(\d{2})/,"$1-$2-$3");
+    $("daystrip").innerHTML = ds.map(function(k,i){
+      var label = (k === todayK) ? "Today" : fmtDayShort(k).split(" ")[0];
+      var sub = (k === todayK) ? fmtDayShort(k) : fmtDayShort(k).split(" ").slice(1).join(" ");
+      return '<button class="daypill'+(i===S.dayIdx?" active":"")+'" data-i="'+i+'">'+label+'<small>'+sub+'</small></button>';
     }).join("");
+  }
 
+  function smoothPath(pts){
+    var d = "M "+pts[0].x.toFixed(1)+","+pts[0].y.toFixed(1);
+    for(var i=0;i<pts.length-1;i++){
+      var p0=pts[Math.max(0,i-1)], p1=pts[i], p2=pts[i+1], p3=pts[Math.min(pts.length-1,i+2)];
+      var c1x=p1.x+(p2.x-p0.x)/6, c1y=p1.y+(p2.y-p0.y)/6;
+      var c2x=p2.x-(p3.x-p1.x)/6, c2y=p2.y-(p3.y-p1.y)/6;
+      d += " C "+c1x.toFixed(1)+","+c1y.toFixed(1)+" "+c2x.toFixed(1)+","+c2y.toFixed(1)+" "+p2.x.toFixed(1)+","+p2.y.toFixed(1);
+    }
+    return d;
+  }
+
+  function renderCurve(){
+    var ds = days(), key = ds[S.dayIdx];
+    if(!key) return;
+    $("curveDay").textContent = fmtDayLong(key);
+    var pts = S.hourly.filter(function(p){ return dayKey(p.t)===key; })
+      .map(function(p){ return { mins:(+p.t.slice(11,13))*60+(+p.t.slice(14,16)), v:+p.v }; });
+    if(pts.length < 2) return;
+
+    var W=600, H=300, PL=52, PR=16, PT=30, PB=34;
+    var vals = pts.map(function(p){return p.v;});
+    var lo = Math.min.apply(null,vals), hi = Math.max.apply(null,vals);
+    var pad = Math.max((hi-lo)*0.3, 0.6); lo -= pad; hi += pad;
+    var X = function(m){ return PL + (m/1440)*(W-PL-PR); };
+    var Y = function(v){ return PT + (1-(v-lo)/(hi-lo))*(H-PT-PB); };
+    var sp = pts.map(function(p){ return {x:X(p.mins), y:Y(p.v)}; });
+
+    var s = "";
+    // gridlines + y labels
+    for(var g=0; g<=3; g++){
+      var gv = lo + (hi-lo)*g/3, gy = Y(gv);
+      s += '<line x1="'+PL+'" y1="'+gy+'" x2="'+(W-PR)+'" y2="'+gy+'" stroke="#e3ebf3" stroke-width="1"/>';
+      s += '<text x="'+(PL-8)+'" y="'+(gy+6)+'" text-anchor="end" font-size="19" fill="#8aa2bb">'+gv.toFixed(0)+'ft</text>';
+    }
+    // x labels
+    [["12am",0],["6am",360],["12pm",720],["6pm",1080]].forEach(function(lbl){
+      s += '<text x="'+X(lbl[1])+'" y="'+(H-8)+'" text-anchor="middle" font-size="19" fill="#8aa2bb">'+lbl[0]+'</text>';
+    });
+    // area fill
+    var line = smoothPath(sp);
+    s += '<path d="'+line+' L '+sp[sp.length-1].x.toFixed(1)+','+(H-PB)+' L '+sp[0].x.toFixed(1)+','+(H-PB)+' Z" fill="url(#tidegrad)" opacity="0.55"/>';
+    s += '<defs><linearGradient id="tidegrad" x1="0" y1="0" x2="0" y2="1">'
+       + '<stop offset="0" stop-color="#0e9bd8" stop-opacity="0.9"/>'
+       + '<stop offset="1" stop-color="#0e9bd8" stop-opacity="0.05"/></linearGradient></defs>';
+    s += '<path d="'+line+'" fill="none" stroke="#0e9bd8" stroke-width="4" stroke-linecap="round"/>';
+
+    // max tide height dashed line + label
+    var maxV = Math.max.apply(null, vals);
+    var my = Y(maxV);
+    s += '<line x1="'+PL+'" y1="'+my+'" x2="'+(W-PR)+'" y2="'+my+'" stroke="#0e9bd8" stroke-width="2" stroke-dasharray="8,6"/>';
+    var lbl = "Max "+maxV.toFixed(1)+" ft", lx = W-PR-8;
+    s += '<rect x="'+(lx-148)+'" y="'+(my-32)+'" width="148" height="30" rx="15" fill="#0e9bd8"/>';
+    s += '<text x="'+(lx-74)+'" y="'+(my-10)+'" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">'+lbl+'</text>';
+
+    // high/low extrema dots for the day
+    S.hilo.filter(function(p){ return dayKey(p.t)===key; }).forEach(function(p){
+      var m = (+p.t.slice(11,13))*60 + (+p.t.slice(14,16));
+      var cx = X(m), cy = Y(+p.v);
+      s += '<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="'+(p.type==="H"?"#0e9bd8":"#274b73")+'" stroke="#fff" stroke-width="3"/>';
+    });
+
+    // now marker
+    var now = new Date();
+    var todayK = ymd(now).replace(/(\d{4})(\d{2})(\d{2})/,"$1-$2-$3");
+    if(key === todayK){
+      var nm = now.getHours()*60 + now.getMinutes();
+      var nx = X(nm);
+      var nv = null;
+      for(var i=0;i<pts.length-1;i++){
+        if(pts[i].mins <= nm && nm <= pts[i+1].mins){
+          var f = (nm-pts[i].mins)/Math.max(1,(pts[i+1].mins-pts[i].mins));
+          nv = pts[i].v + f*(pts[i+1].v-pts[i].v); break;
+        }
+      }
+      if(nv !== null){
+        var ny = Y(nv);
+        s += '<line x1="'+nx+'" y1="'+PT+'" x2="'+nx+'" y2="'+(H-PB)+'" stroke="#f0a13c" stroke-width="3"/>';
+        s += '<circle class="nowdot" cx="'+nx+'" cy="'+ny+'" r="11" fill="#f0a13c" stroke="#fff" stroke-width="3"/>';
+      }
+    }
+    $("curve").innerHTML = s;
+  }
+
+  function renderList(){
+    var ds = days(), key = ds[S.dayIdx];
+    var list = S.hilo.filter(function(p){
+      return dayKey(p.t)===key && (S.filter==="all" || p.type===S.filter);
+    });
+    $("tideList").innerHTML = list.length ? list.map(function(p){
+      var isH = p.type==="H";
+      return '<div class="tide-row"><span class="t"><span class="badge '+(isH?"H":"L")+'">'
+        +(isH?"▲":"▼")+'</span>'+(isH?"High tide":"Low tide")
+        +'</span><span><span class="tt"><b>'+fmtTime(p.t)+'</b></span> <span class="h">'+Number(p.v).toFixed(1)+' ft</span></span></div>';
+    }).join("") : '<div style="color:var(--muted);padding:12px 4px;font-size:16px;">No tides in this view.</div>';
+    var btns = $("filterSeg").querySelectorAll("button");
+    for(var i=0;i<btns.length;i++) btns[i].classList.toggle("active", btns[i].getAttribute("data-f")===S.filter);
+  }
+
+  function render(){
+    renderHero(); renderStrip(); renderCurve(); renderList();
     $("loading").style.display = "none";
     $("app").style.display = "block";
     var st = $("status");
-    if(isStale){
+    if(S.stale){
       st.className = "status stale";
       st.textContent = "Showing last saved tides — couldn't reach live data. Pull to refresh.";
     } else {
       st.className = "status";
       st.textContent = "Live from NOAA";
     }
-    $("updatedLine").textContent = "Updated " + fetchedAt.toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+    $("updatedLine").textContent = "Updated " + S.fetchedAt.toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
   }
 
-  function fail(msg, cached){
-    $("loading").style.display = "none";
-    if(cached){
-      render(cached.preds, new Date(cached.at), true);
-      return;
-    }
-    $("status").className = "status stale";
-    $("status").innerHTML = "Couldn't load tide data.<br><button class='retry' onclick='location.reload()'>Try again</button>";
+  $("daystrip").addEventListener("click", function(e){
+    var b = e.target.closest("button[data-i]");
+    if(b){ S.dayIdx = +b.getAttribute("data-i"); renderStrip(); renderCurve(); renderList(); }
+  });
+  $("filterSeg").addEventListener("click", function(e){
+    var b = e.target.closest("button[data-f]");
+    if(b){ S.filter = b.getAttribute("data-f"); renderList(); }
+  });
+
+  function saveCache(){
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({at:S.fetchedAt.getTime(), hilo:S.hilo, hourly:S.hourly})); }catch(e){}
+  }
+  function loadCache(){
+    try{
+      var c = JSON.parse(localStorage.getItem(CACHE_KEY));
+      if(c && c.hilo && c.hilo.length){ return c; }
+    }catch(e){}
+    return null;
   }
 
-  fetchTides().then(function(preds){
-    var at = Date.now();
-    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({at:at, preds:preds})); }catch(e){}
-    render(preds, new Date(at), false);
+  Promise.all([get(api("predictions","hilo")), get(api("predictions","h"))]).then(function(r){
+    S.hilo = r[0]; S.hourly = r[1];
+    S.fetchedAt = new Date(); S.stale = false;
+    saveCache(); render();
   }).catch(function(){
-    var cached = null;
-    try{ cached = JSON.parse(localStorage.getItem(CACHE_KEY)); }catch(e){}
-    fail("offline", cached);
+    var c = loadCache();
+    if(c){
+      S.hilo = c.hilo; S.hourly = c.hourly || [];
+      S.fetchedAt = new Date(c.at); S.stale = true;
+      render();
+    } else {
+      $("loading").style.display = "none";
+      $("status").className = "status stale";
+      $("status").textContent = "Couldn't load tide data. Check connection and reopen.";
+    }
   });
 })();
 </script>
